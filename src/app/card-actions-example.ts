@@ -1,4 +1,5 @@
-import {Component} from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import mermaid from "mermaid";
 
 /**
  * @title Card with actions alignment option
@@ -7,9 +8,34 @@ import {Component} from '@angular/core';
   selector: 'card-actions-example',
   templateUrl: 'card-actions-example.html',
 })
-export class CardActionsExample {}
+export class CardActionsExample  implements AfterViewInit {
+
+  constructor() { }
+
+  
+  @ViewChild('mermaidDiv') mermaidDiv: ElementRef;
+
+  public ngAfterViewInit(): void {
+    /*mermaid.initialize({
+        theme: "default"
+    });*/
+const config = {
+    startOnLoad: true,
+    flowchart: {
+        useMaxWidth: false,
+        htmlLabels: true
+    }
+};
+
+mermaid.initialize(config);
+    
+    const element: any = this.mermaidDiv.nativeElement;
+    const graphDefinition = `graph TD\nA[Christmas] -->|Get money| B(Go shopping)\nB --> C(Let me think)\nC -->|One| D[Laptop]\nC -->|Two| E[iPhone]\nC -->|Three| F[fa:fa-car Car]\nA[Christmas] -->|Get money| D[Laptop]\nB --> E`;
+    mermaid.render("graphDiv", graphDefinition, (svgCode, bindFunctions) => {
+        element.innerHTML = svgCode;
+        bindFunctions(element);
+    });
+  }
 
 
-/**  Copyright 2022 Google LLC. All Rights Reserved.
-    Use of this source code is governed by an MIT-style license that
-    can be found in the LICENSE file at https://angular.io/license */
+}
